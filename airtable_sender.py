@@ -5,15 +5,15 @@ import signal
 
 RUNNING_STATUS_FILE = "airtable_sender.run"
 STOP_SIGNAL_FILE = "airtable_sender.stop"
+url = "https://hooks.airtable.com/workflows/v1/genericWebhook/appTNX6MFpk1UVS4t/wflGCOMfVRUN3LGFJ/wtrqXE99SxadiBekS"  # Define url here
 
 def send_request():
-    # ... (your send_request function - no changes needed)
     try:
         print("[INFO] Preparing to send POST request...")
-        payload = {"trigger": "true"}  # Example payload
+        payload = {"trigger": "true"}
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         print("[INFO] Sending POST request...")
-        response = requests.post(url, data=payload, headers=headers)
+        response = requests.post(url, data=payload, headers=headers)  # Use the defined url
         print("[INFO] Waiting for response...")
         print(f"[INFO] Response received: {response.text}")
 
@@ -27,7 +27,7 @@ def send_request():
         return False
 
 
-def signal_handler(sig, frame):  # Correctly defined at the top level
+def signal_handler(sig, frame):
     print('You pressed Ctrl+C or the process was killed!')
     try:
         os.remove(RUNNING_STATUS_FILE)
@@ -38,14 +38,16 @@ def signal_handler(sig, frame):  # Correctly defined at the top level
 
 signal.signal(signal.SIGINT, signal_handler)
 
-while True:  # Correct indentation here
+wait = 180  # Define wait here (or earlier)
+
+while True:
     if os.path.exists(RUNNING_STATUS_FILE) and not os.path.exists(STOP_SIGNAL_FILE):
         if not send_request():
-            break  # Exit loop if sending fails
+            break
         print(f"[INFO] Waiting {wait}s before next request...")
-        for i in range(wait, 0, -1):  # Correct indentation here
-            print(f"[INFO] {i}s remaining...")  # Correct indentation here
-            time.sleep(1)  # Correct indentation here
+        for i in range(wait, 0, -1):
+            print(f"[INFO] {i}s remaining...")
+            time.sleep(1)
     else:
         print("[INFO] Script is paused. Waiting for start signal or stop signal...")
-        time.sleep(10)  # Check every 10 seconds for the file  # Correct indentation here
+        time.sleep(10)
