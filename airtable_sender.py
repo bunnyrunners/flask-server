@@ -38,7 +38,7 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-wait = 180  # Define wait here (or earlier)
+wait = 20  # Define wait here (or earlier)
 
 while True:
     if os.path.exists(RUNNING_STATUS_FILE) and not os.path.exists(STOP_SIGNAL_FILE):
